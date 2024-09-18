@@ -1,0 +1,225 @@
+/* Importação da fonte Chakra Petch */
+@import url("https://fonts.googleapis.com/css2?family=Chakra+Petch:ital,wght@0,300;0,400;0,500;0,600;0,700&display=swap");
+
+/* Estilos globais */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box; /* Inclui padding e border no cálculo de largura/altura */
+  font-family: "Chakra Petch", sans-serif; /* Fonte padrão */
+  scrollbar-width: none; /* Oculta a barra de rolagem */
+}
+
+/* Estilos do corpo da página */
+body {
+  width: 100%;
+  height: 100vh; /* Altura total da viewport */
+  background-color: #101010; /* Cor de fundo */
+  display: flex;
+  align-items: center; /* Alinha verticalmente ao centro */
+  justify-content: center; /* Alinha horizontalmente ao centro */
+}
+
+/* Estilos do cabeçalho */
+header {
+  width: 85%;
+  height: 95%; /* Altura do cabeçalho */
+  border: 2px solid #169b44; /* Borda do cabeçalho */
+  background-color: #11c76f; /* Cor de fundo do cabeçalho */
+  display: flex;
+  flex-direction: column; /* Alinha os filhos em coluna */
+  align-items: center; /* Centraliza os filhos */
+  padding: 1rem; /* Espaçamento interno */
+  box-sizing: border-box; /* Inclui padding e border no cálculo de largura/altura */
+  position: relative; /* Permite o posicionamento absoluto dos filhos */
+  border-radius: 1rem; /* Arredondamento dos cantos */
+  transition: height 0.5s ease; /* Transição suave para a altura */
+}
+
+/* Estilos para a mensagem de carregamento */
+#loading {
+  display: none; /* Escondido por padrão */
+  text-align: center; /* Centraliza o texto */
+  font-size: 1.5em; /* Tamanho da fonte */
+  margin-top: 20px; /* Margem superior */
+}
+
+/* Estilo da imagem no cabeçalho */
+img {
+  position: absolute; /* Permite o posicionamento absoluto */
+  left: 5px; /* Alinhado à esquerda */
+  top: 5px; /* Alinhado ao topo */
+}
+
+/* Estilos do campo de pesquisa e botão */
+section {
+  width: 100%;
+  display: flex; /* Flexbox para organizar os filhos */
+  justify-content: flex-end; /* Alinha os filhos à direita */
+  gap: 3px; /* Espaçamento entre os elementos */
+  position: absolute; /* Permite posicionamento absoluto */
+  right: 3px; /* Alinhado à direita */
+  top: 3px; /* Alinhado ao topo */
+}
+
+/* Estilo da barra de pesquisa */
+.search-bar {
+  display: flex; /* Flexbox para organizar os filhos */
+  justify-content: flex-end; /* Alinha à direita */
+  width: 100%; /* Largura total */
+}
+
+/* Contêiner do input de pesquisa */
+.input-container {
+  position: relative; /* Permite o posicionamento absoluto dos filhos */
+  width: 100%; /* Largura total */
+  max-width: 20rem; /* Largura máxima */
+}
+
+/* Estilo do placeholder */
+input::placeholder {
+  color: #ffffff91; /* Cor do texto do placeholder */
+}
+
+/* Estilo do input de pesquisa */
+.input-container input {
+  width: 100%; /* Largura total */
+  padding: 1rem 3.5rem 1rem 1rem; /* Padding interno */
+  border-radius: 1rem; /* Arredondamento dos cantos */
+  border: none; /* Sem borda */
+  color: #ffffff; /* Cor do texto */
+  outline: none; /* Remove o contorno padrão */
+  background-color: #101010; /* Cor de fundo */
+  margin-top: 5px; /* Margem superior */
+  transform: translateX(-5px); /* Move o input para a esquerda */
+  opacity: 0.9; /* Transparência */
+}
+
+/* Estilo do botão de pesquisa */
+.input-container button {
+  position: absolute; /* Permite posicionamento absoluto */
+  right: calc(1rem + 5px); /* Posicionamento à direita */
+  top: 50%; /* Centraliza verticalmente */
+  transform: translateY(-50%); /* Ajusta para centralizar */
+  background-color: transparent; /* Fundo transparente */
+  border: none; /* Sem borda */
+  cursor: pointer; /* Muda o cursor para pointer */
+  color: #169b44; /* Cor do texto do botão */
+}
+
+/* Efeito de hover no botão */
+.input-container button:hover {
+  color: #ffffff; /* Muda a cor ao passar o mouse */
+}
+
+/* Estilos para sugestões de pesquisa */
+.suggestions {
+  color: #ffffff; /* Cor do texto */
+  background-color: #101010; /* Cor de fundo das sugestões */
+  opacity: 0.9; /* Transparência */
+  max-height: 200px; /* Altura máxima */
+  overflow-y: auto; /* Permite rolagem vertical */
+  position: absolute; /* Permite posicionamento absoluto */
+  z-index: 1000; /* Coloca as sugestões acima de outros elementos */
+  border-radius: 1rem; /* Arredondamento dos cantos */
+  margin-top: 5px; /* Espaço acima das sugestões */
+  width: calc(100% - 10px); /* Largura com margem */
+}
+
+/* Estilos para cada item de sugestão */
+.suggestion-item {
+  padding: 15px; /* Padding interno */
+  cursor: pointer; /* Muda o cursor para pointer */
+}
+
+/* Efeito de hover nos itens de sugestão */
+.suggestion-item:hover {
+  background-color: #169b44; /* Muda a cor ao passar o mouse */
+  border-radius: 1rem; /* Arredondamento dos cantos */
+}
+
+/* Estilos da seção de resultados */
+.Resultado {
+  margin-top: 2rem; /* Espaço acima da seção */
+}
+
+/* Estilo do título dos resultados */
+.resultado-titulo {
+  font-size: 1.5rem; /* Tamanho do texto */
+  margin-bottom: 1rem; /* Espaço abaixo do título */
+  text-align: center; /* Centraliza o texto */
+  font-size: 2.5vw; /* Fonte responsiva com relação à largura da tela */
+  color: #f5f7f8; /* Cor do texto */
+  position: absolute; /* Permite posicionamento absoluto */
+  left: 5px; /* Alinhado à esquerda */
+  top: 100px; /* Posição do topo */
+}
+
+/* Estilos do contêiner de resultados */
+#results {
+  display: grid; /* Utiliza grid para os resultados */
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); /* Ajusta o número de colunas conforme o tamanho */
+  gap: 3px; /* Espaço entre os itens */
+  width: 100%; /* Largura total */
+  margin-top: 4rem; /* Margem superior */
+  padding: 1rem; /* Padding interno */
+  border: none; /* Sem borda */
+  border-radius: 1rem; /* Arredondamento dos cantos */
+  box-sizing: border-box; /* Inclui padding e border no cálculo */
+  overflow-y: auto; /* Permite rolagem vertical */
+  flex-grow: 1; /* Permite que o contêiner cresça */
+  max-height: 70vh; /* Altura máxima */
+}
+
+/* Estilos para cada item de resultado */
+.result-item {
+  display: flex; /* Utiliza flexbox */
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  padding: 0; /* Sem padding */
+  margin: 0; /* Sem margem */
+}
+
+/* Estilos para iframes dentro dos resultados */
+iframe {
+  display: block; /* Bloco */
+  width: 100%; /* Largura total */
+  max-width: 100%; /* Largura máxima */
+  height: 16vh; /* Altura do iframe */
+  border: none; /* Sem borda */
+  transition: transform 0.3s; /* Transição suave para transformações */
+}
+
+/* Efeito de hover no iframe */
+.result-item iframe:hover {
+  transform: scale(1.1); /* Aumenta o tamanho ao passar o mouse */
+}
+
+/* Remove a barra de rolagem no Chrome, Safari e Opera */
+#results::-webkit-scrollbar {
+  display: none; /* Esconde a barra de rolagem */
+}
+
+#results {
+  -ms-overflow-style: none; /* Para Internet Explorer 10+ */
+}
+
+/* Media queries para telas menores */
+@media (max-width: 768px) {
+  header {
+    width: 95%; /* Largura do cabeçalho em dispositivos menores */
+    height: 90%; /* Altura do cabeçalho em dispositivos menores */
+  }
+
+  h1 {
+    font-size: 4vw; /* Tamanho da fonte para h1 em dispositivos menores */
+  }
+
+  #results {
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); /* Ajusta colunas para dispositivos móveis */
+  }
+
+  .result-item iframe {
+    height: 18vh; /* Aumenta a altura do iframe em dispositivos menores */
+  }
+}

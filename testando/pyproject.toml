@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "testando"
+version = "0.1.0"
+description = ""
+authors = ["Henry Gabriel <63942305+HenryGabriel-2407@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = {extras = ["standard"], version = "^0.112.2"}
+pytest = "^8.3.2"
+ruff = "^0.6.3"
+taskipy = "^1.13.0"
+pydantic = "^2.8.2"
+ytmusicapi = "^1.8.1"
+
+[tool.poetry.group.dev.dependencies]
+coverage = "^7.6.1"
+
+[tool.ruff]
+line-length = 200
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+lint = 'ruff check .'
+format = 'ruff check . --fix'
+run = 'fastapi dev testando/app.py'
+pre_test = 'task lint'
+test = 'pytest -cov=testando -vv'
+post_test = 'coverage html'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

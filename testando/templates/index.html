@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pesquisa de Música</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <style>
+        /* Estilo para animação de altura do header */
+        header {
+            transition: height 0.5s ease; /* Animação suave na altura */
+        }
+
+        header.shrink {
+            height: 280px; /* Altura reduzida do header */
+        }
+    </style>
+</head>
+<body>
+    <header class="shrink">
+        <!-- Adiciona a classe shrink inicialmente -->
+        <img src="/static/Spotify.png" width="15%" alt="logo" />
+
+        <!-- CAMPO DE PESQUISA E BUSCA-->
+        <section class="search-bar">
+            <div class="input-container" style="position: relative">
+                <input
+                    id="search-query"
+                    type="text"
+                    placeholder="Digite o nome da música ou artista"
+                    oninput="fetchSuggestions(event)"onkeydown="handleKeyDown(event)"/> <!-- Chama a função para buscar sugestões -->
+               <!-- Lida com as teclas pressionadas --> 
+                <button onclick="searchMusic()">
+                    <i class="fa fa-search" aria-hidden="true"></i> <!-- Ícone de pesquisa -->
+                </button>
+                <div id="suggestions" class="suggestions"></div> <!-- Container para sugestões -->
+            </div>
+        </section>
+
+        <!-- Resultado da pesquisa -->
+        <section class="Resultado">
+            <section class="results" id="results"></section> <!-- Container para resultados -->
+        </section>
+
+        <!-- Carregador -->
+        <div id="loading">Carregando...</div>
+    </header>
+
+    <script>
+        let selectedSuggestionIndex = -1; // Índice da sugestão selecionada
+
+        // Função para buscar sugestões com base na entrada do usuário
+        async function fetchSuggestions(event) {
+            const query = event.target.value; // Obtém o valor da entrada
+            const suggestionsContainer = document.getElementById("suggestions");
+            suggestionsContainer.innerHTML = ""; // Limpa sugestões anteriores
+            selectedSuggestionIndex = -1; // Reseta o índice de sugestão selecionada
+
+            if (!query) return; // Retorna se não houver consulta
+
+            try {
+                const response = await fetch(`/suggestions?q=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error("Erro ao buscar sugestões");
+
+                const data = await response.json(); // Converte a resposta em JSON
+                data.suggestions.forEach((suggestion) => {
+                    const suggestionItem = document.createElement("div");
+                    suggestionItem.className = "suggestion-item";
+                    suggestionItem.innerText = suggestion.name; // Define o texto da sugestão
+                    suggestionItem.onclick = () => {
+                        document.getElementById("search-query").value = suggestion.name; // Define a entrada com a sugestão
+                        suggestionsContainer.innerHTML = ""; // Limpa sugestões
+                        searchMusic(); // Realiza a pesquisa
+                    };
+                    suggestionsContainer.appendChild(suggestionItem); // Adiciona sugestão ao container
+                });
+
+                if (data.suggestions.length > 0) {
+                    selectedSuggestionIndex = 0; // Seleciona a primeira sugestão
+                    highlightSuggestion(suggestionsContainer.children); // Destaca a sugestão
+                }
+            } catch (error) {
+                console.error("Erro:", error); // Log de erro
+            }
+        }
+
+        // Função para lidar com eventos de tecla pressionada
+        function handleKeyDown(event) {
+            const suggestions = document.querySelectorAll(".suggestion-item");
+
+            if (event.key === "ArrowDown") {
+                selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1); // Navega para baixo nas sugestões
+                highlightSuggestion(suggestions); // Destaca a sugestão
+                scrollToSuggestion(suggestions); // Rola para a sugestão
+            } else if (event.key === "ArrowUp") {
+                selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, 0); // Navega para cima nas sugestões
+                highlightSuggestion(suggestions);
+                scrollToSuggestion(suggestions);
+            } else if (event.key === "Enter") {
+                if (selectedSuggestionIndex >= 0) {
+                    suggestions[selectedSuggestionIndex].click(); // Clica na sugestão selecionada
+                } else {
+                    searchMusic(); // Realiza a pesquisa
+                }
+            }
+        }
+
+        // Função para destacar a sugestão selecionada
+        function highlightSuggestion(suggestions) {
+            suggestions.forEach((suggestion, index) => {
+                suggestion.style.backgroundColor = index === selectedSuggestionIndex ? "#169b44" : "#101010"; // Muda a cor de fundo
+            });
+        }
+
+        // Função para rolar o container de sugestões
+        function scrollToSuggestion(suggestions) {
+            if (selectedSuggestionIndex < 0) return;
+
+            const selected = suggestions[selectedSuggestionIndex];
+            const container = document.getElementById("suggestions");
+
+            const containerRect = container.getBoundingClientRect(); // Obtem o tamanho do container
+            const selectedRect = selected.getBoundingClientRect(); // Obtem o tamanho da sugestão
+
+            // Rola o container se a sugestão estiver fora de vista
+            if (selectedRect.bottom > containerRect.bottom) {
+                container.scrollTop += selectedRect.bottom - containerRect.bottom;
+            } else if (selectedRect.top < containerRect.top) {
+                container.scrollTop -= containerRect.top - selectedRect.top;
+            }
+        }
+
+        // Função para realizar a pesquisa de música
+        async function searchMusic() {
+            const query = document.getElementById("search-query").value; // Obtém o valor da entrada
+            const resultsContainer = document.getElementById("results");
+            resultsContainer.innerHTML = ""; // Limpa resultados anteriores
+
+            const header = document.querySelector("header");
+
+            // Se não houver pesquisa, adiciona a classe shrink
+            if (!query) {
+                header.classList.add("shrink");
+                return;
+            }
+
+            // Remove a classe shrink ao realizar a pesquisa
+            header.classList.remove("shrink");
+
+            document.getElementById("loading").style.display = "block"; // Exibe o carregador
+            const iframesLoaded = []; // Array para rastrear iframes carregados
+
+            try {
+                const response = await fetch(`/search/?q=${encodeURIComponent(query)}`);
+                if (!response.ok) throw new Error("Erro ao buscar músicas");
+
+                const data = await response.json(); // Converte a resposta em JSON
+
+                if (data.musicas.length > 0) {
+                    data.musicas.forEach((musica) => {
+                        const resultItem = document.createElement("div");
+                        resultItem.className = "result-item";
+                        const iframe = document.createElement("iframe");
+                        iframe.src = `${musica.link}?utm_source=generator`; // Define a URL do iframe
+                        iframe.allowTransparency = "true";
+                        iframe.allow = "encrypted-media";
+
+                        // Adiciona um listener para o evento 'load'
+                        iframe.onload = () => {
+                            iframesLoaded.push(true); // Adiciona iframe carregado
+                            // Esconde o carregador após todos os iframes serem carregados
+                            if (iframesLoaded.length === data.musicas.length) {
+                                setTimeout(() => {
+                                    document.getElementById("loading").style.display = "none"; // Esconde o carregador
+                                }, 5000);
+                            }
+                        };
+
+                        resultItem.appendChild(iframe); // Adiciona o iframe ao item de resultado
+                        resultsContainer.appendChild(resultItem); // Adiciona o item de resultado ao container
+                    });
+                }
+            } catch (error) {
+                console.error("Erro:", error); // Log de erro
+                resultsContainer.innerHTML = ""; // Limpa resultados em caso de erro
+            }
+        }
+
+        // Fecha sugestões ao clicar fora do input
+        document.addEventListener("click", function (event) {
+            const suggestionsContainer = document.getElementById("suggestions");
+            const inputContainer = document.querySelector(".input-container");
+            if (!inputContainer.contains(event.target)) {
+                suggestionsContainer.innerHTML = ""; // Limpa sugestões
+            }
+        });
+    </script>
+</body>
+</html>

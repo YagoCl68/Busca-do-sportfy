@@ -1,7 +1,7 @@
 # Spotify Fake
  Trabalho de Engenharia de Software
 
-Este projeto é um trabalho para a disciplina de Engenharia de Software e foi desenvolvido em parceria com o aluno Henry Gabriel. A aplicação utiliza o FastAPI para permitir que os usuários pesquisem músicas e artistas através da API do Spotify, oferecendo sugestões em tempo real e resultados interativos.
+Este projeto é um trabalho para a disciplina de Engenharia de Software e foi desenvolvido em parceria com o aluno [Henry Gabriel](https://github.com/HenryGabriel-2407). A aplicação utiliza o FastAPI para permitir que os usuários pesquisem músicas e artistas através da API do Spotify, oferecendo sugestões em tempo real e resultados interativos.
 
 
 Funcionalidades
